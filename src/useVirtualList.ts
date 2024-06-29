@@ -11,7 +11,7 @@ const useVirtualList = <T extends HTMLElement, K>({
   pages,
 }: {
   position: number;
-  loadCount: (position: number) => Promise<any> | undefined;
+  loadCount: (position: number) => Promise<K[]> | undefined;
   pages: K[][] | undefined;
 }) => {
   const containerRef = useRef<T>(null);
@@ -29,6 +29,7 @@ const useVirtualList = <T extends HTMLElement, K>({
     return () => {
       positionObs.unsubscribe(fn);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const callbackFunction = useCallback(async (entries: IntersectionObserverEntry[]) => {
@@ -37,8 +38,6 @@ const useVirtualList = <T extends HTMLElement, K>({
 
     const isSentinelUp = element.dataset.sentinel === 'up';
     const isSentinelDown = element.dataset.sentinel === 'down';
-
-    // console.log('lastItem', lastItem);
 
     if (isSentinelUp) {
       const currentPosition = positionObs.$value ?? 0;
@@ -83,11 +82,11 @@ const useVirtualList = <T extends HTMLElement, K>({
         observer.unobserve(sentinelDown);
       }
     };
-  }, [sentinelUpRef.current, sentinelDownRef.current, containerRef.current, callbackFunction]);
+  }, [callbackFunction]);
 
   const data = useMemo(() => {
-    return pages ? handleDataVirtualList<K>(pages, positionObs.$value || 0, 10) : [];
-  }, [pages, positionObs.$value]);
+    return pages ? handleDataVirtualList<K>(pages, positionObs.$value || 0) : [];
+  }, [pages]);
 
   return {
     containerRef,
