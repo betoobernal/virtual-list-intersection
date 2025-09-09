@@ -1,0 +1,17 @@
+.item {
+  // overflow-anchor: none;
+  background-color: burlywood;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.container {
+  background-color: blanchedalmond;
+  width: 80%;
+  margin: 0 auto;
+  height: 200px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
